@@ -65,7 +65,7 @@ The basic flow is that their a frontend and the frontend is communicating with t
 
 Now in order to actually grant an access token is need to have a set of credentials , so for that the first thing to do is to create a new user , once new user is created then their username and password can be stored and use their credentials , so use the username and their password to log in and access the access token for that user.
 
-###JWT Setup
+### JWT Setup
 
 Inside the main api folder create  a new file called **serializers.py** and then import "from django.contrib.auth.models import User and from rest_framework import serializers". Next is to create something know as **serializer** and what django does is it uses something known as **ORM** , an ORM is an object relational mapping what this does is it maps python objects to the corresponding code that needs to be executed to make a change in the database so the idea is from the developer perspective , just a normal python code can be written and django in the backend will automaticaly handle all of the database operations that need to be performed now where a serializer comes in is that with the API , use something know as **Json** . Json is javascript object notation and it is the standard format for communicating with web applications ,so from the API , we are accepting json data that contains things like the username and the password for a new user and alsom returning json data with information about the response that this API is giving to whoever made a request so what is needed to do is to create a serializer which is something that can take this python object and convert it into json data.
 
@@ -102,3 +102,29 @@ Now going to the views.py to make view for creating a note and deleting a note. 
 Now lets setup urls for this views so in api folder create a new file name urls.py. import django.urls import path then from. import views , urlpatterns=[path("notes/",views.NoteListCreate.as_view(), name="note-list"),path("notes/delete/<int:pk>",views.NoteDelete.as_view(), name ="delete-note")] int:pk stands for primary key .Now link the urls with the main urls.Now go to urls.py in the backend .path("",include("api.urls")).Now make migrations and run the code .Then go to api/token login then copy the access token . then go to api/notes it says authentication were not provided its because we didnt pass the access token. So for that we are just going to write the frontend and then pass that token and actually be aple to create the notes.
 
 ### Starting with React
+
+Open the main directory ,no longer in the backend directory . Using vite to create a new react project. so use command in the terminals main directory **npm create vite@latest frontend -- --template react** then you will see frontend folder but remember your env must be activated .Go to the frontend directory to install various packages that will be needed. **npm install axios** , for network request install **react-router-dom** and last one is  **jwt-decode**.
+
+#### Frontend and Axios Setup
+
+First organizing the directory for that go to src and delete the css files that are not required. Next go to app.jsx and remove the body , in short remove everything inside <> </> , and also remove this the usestate that is use after the function and remove all of the imports. Now import **react** from react.Next is go to main.jsx  and remove the css file import , it is not required and we have deleted that css file. Making 3 new folders in src folder with names **pages**, **styles**,**components** then creating few files in src with names **constants.js** , **api.js** . And making an environment variable file inside frontend directory with name **.env**. Starting with constants.js file  and define some constants that we will use in api file . **export const ACCESS_TOKEN = "access" ;** **export const REFRESH_TOKEN = "refresh"**. This is going to be use in local storage to store the access token and the refresh token in the browser.And then need a key to access in the local storage . Going inside the api.js.In this file going to write something known as an interceptor ,this will essentially intercept any request that is going to be send and it will automatically add the correct headers  so we dont need to write it a bunch of many times reptitively in the code , now we are using something known as axios , it is really a clean way to send network requests . 
+
+Going to setup something called as axios interceptor , so its going to check if we  have an access token and if we have , it will automaticaaly added to that request so we dont need to think once we write the code.
+So import **axios** then import accesstoken fromthe constants. Then 
+
+const api =axios.create(
+baseURL : import.meta.env.VITE_API_URL
+)
+
+this allow us to import anything thats specified inside an environment variable file .And if you want to have an environment variable loaded inside of the react code it needs to start with **"Vite"**.
+
+Now going to env file specifying the same thing that is VITE_API_URL="http://localhost:8000", this should be the url of the backend server . so next in api.js file ,writing "api.interceptors.request.use()" inside of here its going to take a function so writing an arrow function and inside the function we are going to accept the config and what we are going to do is look in our local storage and see if we have an access token if we have that we will add this as an authorization header to our request . Then next arrow function for erros that will return error.then export default api. So we can use this api instead of calling axios, we have created a function for returing the headers.
+
+#### Checking Tokens from Frontend and Refreshing it.
+
+Creating a new file inside the components folder name "ProtectedRoute.jsx" and this is going to represent a protected route and the idea is if we wrap something in protected route then we need to have an authorization token before be able to actually access this route. So import navigate from react router dom  ,jwtdecode from jwt decode,api we just created , refresh token and access token from constants. Then cearting function ProtectedRoute take parameter as {children}, so we need to check whether the user is authorized before allowing to access this route otherwise redirect them to login.soo adding a const usestate isauthorized as usestate null.but import usestate before using . then write a function for refreshtoken its going to be an asyn function it will refresh the access token automatically.Then going to have an auth function again asyn function it will check if their a need to refresh the token or not .Then a if condition to check if isAuthorized which was our usestate is equal to null then return a div with text  "Loading..." then after condition  check is isAuthorized  is True then return the children otherwise return the component navigate to login page . Then export the function, now going inside the auth function it will first look at the access token see if it exist and if it exist then check if it is expired or not,if it is expired just automactically refresh the token .Adding a useeffect to catch if the auth function has errors then setauthorized as false.
+
+ 
+
+
+
