@@ -124,7 +124,28 @@ Now going to env file specifying the same thing that is VITE_API_URL="http://loc
 
 Creating a new file inside the components folder name "ProtectedRoute.jsx" and this is going to represent a protected route and the idea is if we wrap something in protected route then we need to have an authorization token before be able to actually access this route. So import navigate from react router dom  ,jwtdecode from jwt decode,api we just created , refresh token and access token from constants. Then cearting function ProtectedRoute take parameter as {children}, so we need to check whether the user is authorized before allowing to access this route otherwise redirect them to login.soo adding a const usestate isauthorized as usestate null.but import usestate before using . then write a function for refreshtoken its going to be an asyn function it will refresh the access token automatically.Then going to have an auth function again asyn function it will check if their a need to refresh the token or not .Then a if condition to check if isAuthorized which was our usestate is equal to null then return a div with text  "Loading..." then after condition  check is isAuthorized  is True then return the children otherwise return the component navigate to login page . Then export the function, now going inside the auth function it will first look at the access token see if it exist and if it exist then check if it is expired or not,if it is expired just automactically refresh the token .Adding a useeffect to catch if the auth function has errors then setauthorized as false.
 
- 
+#### Navigation 
+
+Now lets start with some pages and set up the navigation for this application. Creating some files in pages folder with name Login.jsx , Register.jsx , Home.jsx , NotFound.jsx inside each one creating a component . In all the files write the basic function and return the div text same as the file name. Then go to app.jsx in this file we are going to rout all the pages , navigate to different url  in our application . so import BrowserRouter Routes Route Navigate from react-router-dom and import all the components we just created and also import the ProtectedRoute file we had created.Then write 2 simple functions first one for logging out so function logout it will localstorage.clear() it will clear refresh and access token , then return navigate to /login. Then the second function RegisterAndLogout it will localstorage.clear() and return <Register/>  so if someone is registering , first the localstorage must be cleared so that it dont end up submitting access tokens to the register which will give errror. so coming to the main function for navigating all the components in App return BrowserRouter inside that Routes then inside that specify the home route "<Route   path="/"  element={<ProtectedRoute> <Home/><ProtectedRoute>}/>" , so the point is that it cannot access the home component unless the user have an access token and its valid because home is for login users only .Adding another route /login elements will be only loginpage beacuse its caanot be protected same with all.But add * in the path for NotFound element and add element RegisterAndLogout for /register path . For testing this go to frontend directory and install npm or if install run command npm run dev 
 
 
+#### Home Page
 
+#### List Notes
+
+Home page will list all the notes create
+and delete the notes . So start by importing useeffect, usestate and api 
+then make inside the main Home function add some usestates for notes with empty array as default then for content,title with empty string as default.Writing a funcion to send request **getNotes** it will be am async function so inside that "try" const res = await api.post("/api/notes") then setNotes(res.data) then console.log the same then  catch if error and alert that error then add useeffect getnotes() function.After running this you will see an empty array in console.So this way we send a request . 
+
+#### Delete Notes 
+
+Now writing a function to delete a note so function name deleteNote and taking param as "id" and same like before "try" const res = await api.get("/api/notes/delete/") then if response status is 204 then alert note deleted else alert failed to delete note then call getNote() . Catch the error and alert the error.
+
+#### Create Notes
+
+Creating a fucntion name **createNote**  to create a note and taking "e" inside it . Then e.preventDefault(). Taking res variable to post the request data ("/api/notes",{content,title}) then check if status is 201 then alert note created else failed to create note then again getnotes() and then same catch error and alert the error.
+
+
+#### component Home
+
+Soo in return section in the main div add a div and inside that add h1 tag and write "Notes" so here all the notes will render.Next outside the div add a h2 tag and write "Create a Note" Then add a form tag 
