@@ -128,6 +128,10 @@ Creating a new file inside the components folder name "ProtectedRoute.jsx" and t
 
 Now lets start with some pages and set up the navigation for this application. Creating some files in pages folder with name Login.jsx , Register.jsx , Home.jsx , NotFound.jsx inside each one creating a component . In all the files write the basic function and return the div text same as the file name. Then go to app.jsx in this file we are going to rout all the pages , navigate to different url  in our application . so import BrowserRouter Routes Route Navigate from react-router-dom and import all the components we just created and also import the ProtectedRoute file we had created.Then write 2 simple functions first one for logging out so function logout it will localstorage.clear() it will clear refresh and access token , then return navigate to /login. Then the second function RegisterAndLogout it will localstorage.clear() and return <Register/>  so if someone is registering , first the localstorage must be cleared so that it dont end up submitting access tokens to the register which will give errror. so coming to the main function for navigating all the components in App return BrowserRouter inside that Routes then inside that specify the home route "<Route   path="/"  element={<ProtectedRoute> <Home/><ProtectedRoute>}/>" , so the point is that it cannot access the home component unless the user have an access token and its valid because home is for login users only .Adding another route /login elements will be only loginpage beacuse its caanot be protected same with all.But add * in the path for NotFound element and add element RegisterAndLogout for /register path . For testing this go to frontend directory and install npm or if install run command npm run dev 
 
+#### Generic form
+
+Making a generic form which can be dynamically used for both register and login .
+
 
 #### Home Page
 
@@ -139,7 +143,7 @@ then make inside the main Home function add some usestates for notes with empty 
 
 #### Delete Notes 
 
-Now writing a function to delete a note so function name deleteNote and taking param as "id" and same like before "try" const res = await api.get("/api/notes/delete/") then if response status is 204 then alert note deleted else alert failed to delete note then call getNote() . Catch the error and alert the error.
+Now writing a function to delete a note so function name deleteNote and taking param as "id" and same like before "try" const res = await api.get(`/api/notes/delete/${id}/`) then if response status is 204 then alert note deleted else alert failed to delete note then call getNote() . Catch the error and alert the error.
 
 #### Create Notes
 
@@ -148,4 +152,18 @@ Creating a fucntion name **createNote**  to create a note and taking "e" inside 
 
 #### component Home
 
-Soo in return section in the main div add a div and inside that add h1 tag and write "Notes" so here all the notes will render.Next outside the div add a h2 tag and write "Create a Note" Then add a form tag 
+Soo in return section in the main div add a div and inside that add h1 tag and write "Notes" so here all the notes will render.
+
+Next outside the div add a h2 tag and write "Create a Note" Then add a form tag with onsubmit is createnote function then add label for title and input for title with required fiels,value,id,name,onchange and then again label for content and then textarea with required field ,id,name,value,onchange then input tag for submit with type submit and value submit.Then try to run it .
+
+#### Making Note Component
+
+Making a new component in components folder with name Note.jsx here we will represent a single note and then using the component we will render all notes.
+Then import react and create a function name Note  then add two parameters **note and onDelete**  then in return main div add class note-container 3 p tag for title,content and data then add a button name delete with onclick all the onDelete(note.id).Then create a function name formattedDate pass the data and convert it to proper date format then pass the function in p tag of date. Now going to home and importing this component and then map it and pass the parameter note={note}onDelete={deleteNote} and pass the key={note.id} now it works it can delete create and list the notes.
+
+Creating files in styles.css with name Note,Home,LoadingIndicator .
+
+#### Configure Tailwind css
+
+Css is being too lengthly so using tailwindcss faster, better and less number of lines of code.**npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init**
