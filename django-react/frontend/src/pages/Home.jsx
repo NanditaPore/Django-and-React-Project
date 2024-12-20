@@ -3,7 +3,7 @@ import api from "../api";
 import Note from "../components/Note";
 import "../styles/Form.css";
 import toast, { Toaster } from "react-hot-toast";
-import "../styles/Home.css";
+// import "../styles/Home.css";
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
@@ -11,7 +11,7 @@ const Home = () => {
   const [title, setTitle] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const notesPerPage = 4; // Number of notes to display per page
+  const notesPerPage = 3; // Number of notes to display per page
 
   const getNotes = async () => {
     try {
@@ -73,35 +73,42 @@ const Home = () => {
   }, []);
 
   return (
-    <div>
-      <h2>Notes</h2>
-      <div className="carousel-container">
+    <div className=" m-4">
+      <h2 className="px-6 pb-2 text-lg text-center font-bold">Notes</h2>
+      <div className="flex w-full">
         {/* Carousel notes */}
-        <div className="carousel-notes">
+        
+
+        <div className="flex items-center justify-center gap-4 w-full">
           {displayedNotes.map((note) => (
-            <div className="note" key={note.id}>
+            <div className="w-1/4   flex h-80 " key={note.id}>
               <Note note={note} onDelete={deleteNote} />
             </div>
           ))}
         </div>
+        </div>
+       
 
-        {/* Left arrow button */}
-        {currentIndex > 0 && (
-          <button className="arrow-button arrow-left" onClick={handlePrev}>
+                {/* Left arrow button */}
+                {currentIndex > 0 && (
+                  <button className="bg-gray-400 p-4 px-6 absolute top-72 rounded-full" onClick={handlePrev}>
             &#8592;
           </button>
         )}
+    
+
 
         {/* Right arrow button */}
         {currentIndex + notesPerPage < notes.length && (
-          <button className="arrow-button arrow-right" onClick={handleNext}>
+          <button className="bg-red-400 absolute top-72 right-3 p-4 px-6 rounded-full items-end" onClick={handleNext}>
             &#8594;
           </button>
         )}
-      </div>
+       
+      
 
       <Toaster position="top-center" />
-      <h2>Create a Note</h2>
+      {/* <h2>Create a Note</h2>
       <form onSubmit={createNote}>
         <label htmlFor="title">Title: </label>
         <br />
@@ -125,7 +132,7 @@ const Home = () => {
         ></textarea>
         <br />
         <input type="submit" value="Submit" />
-      </form>
+      </form> */}
     </div>
   );
 };

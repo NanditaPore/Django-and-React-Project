@@ -167,3 +167,8 @@ Creating files in styles.css with name Note,Home,LoadingIndicator .
 
 Css is being too lengthly so using tailwindcss faster, better and less number of lines of code.**npm install -D tailwindcss postcss autoprefixer
 npx tailwindcss init**
+
+
+### Adding layout
+
+Creating navbar and footer for the website.
