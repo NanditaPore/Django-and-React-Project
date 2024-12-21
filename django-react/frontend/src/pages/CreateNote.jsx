@@ -7,9 +7,19 @@ import { useNavigate } from "react-router-dom";
 
 const CreateNote = () => {
   const navigate = useNavigate();
-  const [note, setNote] = useState([]);
+  const [note, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+
+  const getNotes = async () => {
+    try {
+      const res = await api.get("/api/notes/");
+      setNotes(res.data.reverse());
+      console.log(res.data);
+    } catch (err) {
+      alert(err);
+    }
+  };
 
   const createNote = async (e) => {
     e.preventDefault();
@@ -21,6 +31,7 @@ const CreateNote = () => {
       } else {
         toast.error("Failed to Create Note");
       }
+      getNotes();
     } catch (error) {
       toast.error(error);
     }
@@ -33,8 +44,13 @@ const CreateNote = () => {
   return (
     <>
       <Toaster position="top-center" />
-      <div onClick={allNotes} className="flex items-end justify-end px-8 pb-2 font-medium text-lg animate-bounce text-rose-800"> <button>
+      {note.length > 0 ? (
+
+        
+        <div onClick={allNotes} className="flex items-end justify-end px-8 pb-2 font-medium text-lg animate-bounce text-rose-800"> <button>
         View all Notes</button></div>
+      ):("")
+      }
         <h2 className="text-pink-950 text-xl py-2 text-center font-bold">Create Your Note</h2>
       <div className=" flex flex-col w-1/2 items-center mx-auto border-2 border-gray-500 rounded-md shadow-lg shadow-gray-500 p-4" >
         <form className="flex flex-col px-2 my-4 w-full" onSubmit={createNote}>

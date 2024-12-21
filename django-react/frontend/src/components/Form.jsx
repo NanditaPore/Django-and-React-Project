@@ -45,7 +45,14 @@ export const Form = ({route,method}) => {
             localStorage.setItem(ACCESS_TOKEN,res.data.access);
             localStorage.setItem(REFRESH_TOKEN,res.data.resfresh);
             navigate("/")
-        }else{
+        } else if (res.status === 401) {
+          // Handle Unauthorized: Invalid credentials or not registered
+          toast.error("You are not registered or Invalid Username/Password");
+        } else if (res.status === 400) {
+          // Handle Bad Request: Often caused by missing fields or invalid inputs
+          toast.error("Bad Request. Please check your input fields.");
+        }
+        else{
             toast.success('Successfully Registered you are moving to Login Page');
             navigate("/login")
         }

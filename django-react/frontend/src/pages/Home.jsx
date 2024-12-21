@@ -6,6 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 // import "../styles/Home.css";
 import leftarrow from "../../public/svg/left-arrow.svg";
 import rightarrow from "../../public/svg/right-arrow.svg";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
@@ -92,7 +93,16 @@ const Home = () => {
 
   return (
     <div className=" m-4">
+      {notes.length == 0 ?(
+         <div>
+         <Link to="/createnote">
+           <div className="px-6 pb-2 text-lg text-center font-bold">Create Your First Note Now!! <span className="text-pink-400">Click here</span></div>
+         </Link>
+       </div>
+      ):(
+
       <h2 className="px-6 pb-2 text-lg text-center font-bold">Notes</h2>
+      )}
       <div className="flex w-full">
         {/* Carousel notes */}
         
