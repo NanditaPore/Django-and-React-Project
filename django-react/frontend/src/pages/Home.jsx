@@ -4,19 +4,23 @@ import Note from "../components/Note";
 import "../styles/Form.css";
 import toast, { Toaster } from "react-hot-toast";
 // import "../styles/Home.css";
+import leftarrow from "../../public/svg/left-arrow.svg";
+import rightarrow from "../../public/svg/right-arrow.svg";
 
 const Home = () => {
   const [notes, setNotes] = useState([]);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndexsm, setCurrentIndexsm] = useState(0);
 
   const notesPerPage = 3; // Number of notes to display per page
+  const notesPerPagesm =1;
 
   const getNotes = async () => {
     try {
       const res = await api.get("/api/notes/");
-      setNotes(res.data);
+      setNotes(res.data.reverse());
       console.log(res.data);
     } catch (err) {
       alert(err);
@@ -64,9 +68,23 @@ const Home = () => {
       setCurrentIndex(currentIndex - notesPerPage); // Move to the previous note
     }
   };
+  const handleNextsm = () => {
+    if (currentIndexsm + notesPerPagesm < notes.length) {
+      setCurrentIndexsm(currentIndexsm + notesPerPagesm); // Move to the next note
+    }
+  };
+
+  const handlePrevsm = () => {
+    if (currentIndexsm > 0) {
+      setCurrentIndexsm(currentIndexsm - notesPerPagesm); // Move to the previous note
+    }
+  };
 
   // Slice the notes array to only display the notes in the current window
   const displayedNotes = notes.slice(currentIndex, currentIndex + notesPerPage);
+  const displayedNotessm = notes.slice(currentIndexsm, currentIndexsm + notesPerPagesm);
+  
+
 
   useEffect(() => {
     getNotes();
@@ -79,11 +97,20 @@ const Home = () => {
         {/* Carousel notes */}
         
 
-        <div className="flex items-center justify-center gap-4 w-full">
+        <div className="md:flex items-center justify-center md:block hidden gap-4 w-full">
           {displayedNotes.map((note) => (
-            <div className="w-1/4   flex h-80 " key={note.id}>
-              <Note note={note} onDelete={deleteNote} />
-            </div>
+            <div className="w-1/4 flex h-80" key={note.id}>
+            <Note note={note} onDelete={deleteNote} />
+          </div>
+          
+          ))}
+        </div>
+        <div className="flex items-center md:hidden justify-center gap-4 w-full">
+          {displayedNotessm.map((note) => (
+            <div className="w-4/5 flex h-80" key={note.id}>
+            <Note note={note} onDelete={deleteNote} />
+          </div>
+          
           ))}
         </div>
         </div>
@@ -91,8 +118,8 @@ const Home = () => {
 
                 {/* Left arrow button */}
                 {currentIndex > 0 && (
-                  <button className="bg-gray-400 p-4 px-6 absolute top-72 rounded-full" onClick={handlePrev}>
-            &#8592;
+                  <button className="bg-rose-500 md:block hidden p-6 py-6 absolute top-72 rounded-full" onClick={handlePrev}>
+           <img className="w-6" src={leftarrow} alt="" />
           </button>
         )}
     
@@ -100,8 +127,23 @@ const Home = () => {
 
         {/* Right arrow button */}
         {currentIndex + notesPerPage < notes.length && (
-          <button className="bg-red-400 absolute top-72 right-3 p-4 px-6 rounded-full items-end" onClick={handleNext}>
-            &#8594;
+          <button className="bg-rose-500 absolute md:block hidden top-72 right-3 p-6 px-6 rounded-full items-end" onClick={handleNext}>
+       <img className="w-6" src={rightarrow} alt="" />
+          </button>
+        )}
+        
+        {currentIndexsm > 0 && (
+                  <button className="bg-rose-500 p-2 py-2 md:hidden left-3 absolute top-72 rounded-full" onClick={handlePrevsm}>
+           <img className="w-4" src={leftarrow} alt="" />
+          </button>
+        )}
+    
+
+
+        {/* Right arrow button */}
+        {currentIndexsm + notesPerPagesm < notes.length && (
+          <button className="bg-rose-500 absolute md:hidden top-72 right-1 p-2 px-2 rounded-full items-end" onClick={handleNextsm}>
+       <img className="w-4" src={rightarrow} alt="" />
           </button>
         )}
        

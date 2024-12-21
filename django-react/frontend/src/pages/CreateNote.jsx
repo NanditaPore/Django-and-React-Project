@@ -3,8 +3,10 @@ import Note from "../components/Note";
 import { useState, useEffect } from "react";
 import api from "../api";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const CreateNote = () => {
+  const navigate = useNavigate();
   const [note, setNote] = useState([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -23,10 +25,16 @@ const CreateNote = () => {
       toast.error(error);
     }
   };
+   const allNotes=()=>{
+    navigate("/");
+   }
+
 
   return (
     <>
       <Toaster position="top-center" />
+      <div onClick={allNotes} className="flex items-end justify-end px-8 pb-2 font-medium text-lg animate-bounce text-rose-800"> <button>
+        View all Notes</button></div>
         <h2 className="text-pink-950 text-xl py-2 text-center font-bold">Create Your Note</h2>
       <div className=" flex flex-col w-1/2 items-center mx-auto border-2 border-gray-500 rounded-md shadow-lg shadow-gray-500 p-4" >
         <form className="flex flex-col px-2 my-4 w-full" onSubmit={createNote}>
@@ -57,8 +65,8 @@ const CreateNote = () => {
             </textarea>
             </div>
                 
-            <div className="border-2 text-center text-pink-600 hover:bg-pink-500 rounded-md hover:text-white py-2 my-4 mx-28 border-pink-600">
-            <input className="  w-full " type="submit" value="submit" />
+            <div className="border-2 text-center text-pink-600 hover:bg-pink-500 rounded-md hover:text-white  my-4 mx-28 border-pink-600">
+            <input className="py-2  w-full " type="submit" value="submit" />
             </div>
         </form>
       </div>

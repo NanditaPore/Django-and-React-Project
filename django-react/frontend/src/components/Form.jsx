@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { ACCESS_TOKEN , REFRESH_TOKEN } from "../constants";
 import {toast,Toaster} from "react-hot-toast";
-import "../styles/Form.css"
+// import "../styles/Form.css"
 import LoadingIndicator from "./LoadingIndicator";
 
 export const Form = ({route,method}) => {
@@ -13,6 +13,27 @@ export const Form = ({route,method}) => {
 
     const navigate =useNavigate()
     const name = method === "login" ? "Login" :"Register"
+     const text =()=>{
+        if(method === "login"){
+            return(
+                <span> Don't have an account? {" "}
+                <button className="text-rose-800" onClick={()=>navigate('/register')}>
+                    Register now
+                </button>
+                </span>
+                
+            )
+        }else{
+            return(
+                <span> Already have an account? {" "}
+                <button className=" text-rose-800" onClick={()=>navigate('/login')}>
+                    Login now
+                </button>
+                </span>
+            )
+            }
+           
+     };
 
     const handleSubmit= async (e)=>{
         setLoading(true);
@@ -38,27 +59,51 @@ export const Form = ({route,method}) => {
     }
 
   return (
-    <form className="form-container" onSubmit={handleSubmit}>
-        <h1>{name}</h1>
-        <input 
-        className="form-input"
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white p-6 rounded-lg shadow-md w-full max-w-sm"
+    >
+      <h1 className="text-2xl font-bold text-center mb-6">{name}</h1>
+
+      {/* Username Input */}
+      <input
+        className="w-full p-3 mb-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-700"
         type="text"
         value={username}
-        onChange={(e)=>setUsername(e.target.value)}
+        onChange={(e) => setUsername(e.target.value)}
         placeholder="Username"
-         />
-          <input 
-        className="form-input"
+      />
+
+      {/* Password Input */}
+      <input
+        className="w-full p-3 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-700"
         type="password"
         value={password}
-        onChange={(e)=>setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
         placeholder="Password"
-         />
-         {loading && <LoadingIndicator/>}
-         <button className="form-button" type="submit">
-            {name}
-         </button>
+      />
+
+      {/* Loading Indicator */}
+      {loading && (
+        <div className="flex justify-center mb-4">
+          <LoadingIndicator />
+        </div>
+      )}
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="w-full py-3 bg-rose-500 text-white font-semibold rounded-lg hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+      >
+        {name}
+      </button>
+      <div className="p-2 text-center">
+         
+     {text()}
+      </div>
     </form>
+  </div>
   )
 }
 
